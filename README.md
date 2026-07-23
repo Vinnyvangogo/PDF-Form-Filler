@@ -22,3 +22,45 @@ extract_form_field_info.py / fill_fillable_fields.py in the pdf skill):
 
 Usage:
     python3 fill_atp_form.py <input.pdf> <field_values.json> <output.pdf>
+    
+------------------------------------------------------------------------------------------
+
+list_pdf_fields.py
+
+Reads all AcroForm field names from a PDF template and writes them to a
+plain text file (one field name per line, plus type/page metadata).
+
+Usage:
+    python3 list_pdf_fields.py <input.pdf> <output.txt>
+
+Example:
+    python3 list_pdf_fields.py CPS_8281_Rev_A_ATP_Template.pdf CPS_8281_field_names.txt
+
+-----------------------------------------------------------------------------------------
+
+build_field_values_json.py
+
+Generates a ready-to-fill field_values.json for a PDF template, in the
+exact format fill_atp_form.py (and the pdf skill's fill_fillable_fields.py)
+expects:
+
+    [
+      {"field_id": "...", "page": 1, "value": ""},
+      ...
+    ]
+
+Entries are ordered by page, then top-to-bottom, left-to-right (using each
+field's rect), so the JSON reads in the same order fields appear on the
+printed page -- easier to hand-edit or hand off to someone filling in
+values.
+
+- Text fields default to "" (empty string).
+- Checkbox fields default to their unchecked_value (e.g. "/Off"), and get
+  an extra "_checked_value" key noting what value would check them.
+
+Usage:
+    python3 build_field_values_json.py <field_info.json> <output_values.json>
+
+field_info.json is produced by the pdf skill's
+/mnt/skills/public/pdf/scripts/extract_form_field_info.py <template.pdf> <field_info.json>
+    
